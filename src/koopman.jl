@@ -54,7 +54,7 @@ function expectation(g::Function, S::Function, u0, p, expalg::Koopman, args...;
     # create numerical state space values
     ext_state_val = minimum.(ext_state)
     state_view = @view ext_state_val[dist_mask]
-    # param_view = @view ext_state_val[val_mask]
+    param_view = @view ext_state_val[val_mask]
 
     integrand = function (x, p)
         ## Hack to avoid mutating array replacing ext_state_val[ext_state_dist_bitmask] .= x
@@ -83,8 +83,10 @@ function expectation(g::Function, S::Function, u0, p, expalg::Koopman, args...;
     # TODO fix params usage
     lb = minimum.(dists)
     ub = maximum.(dists)
-    T = promote_type(eltype(p),eltype(lb),eltype(ub))
-    intprob = QuadratureProblem(integrand, T.(lb), T.(ub), T.(p), batch=batch, nout=nout)
+    # T = promote_type(eltype(p),eltype(lb),eltype(ub))
+    # intprob = QuadratureProblem(integrand, T.(lb), T.(ub), T.(p), batch=batch, nout=nout)
+    T = promote_type(eltype(u0),eltype(lb),eltype(ub))
+    intprob = QuadratureProblem(integrand, lb, ub, T.(param_view), batch=batch, nout=nout)
     sol = solve(intprob, quadalg, reltol=ireltol, abstol=iabstol, maxiters=maxiters)
 
     sol
