@@ -32,10 +32,44 @@ observable(prob::ExpectationProblem) = prob.g
 input_cov(prob::ExpectationProblem) = prob.h
 parameters(prob::ExpectationProblem) = prob.params
 
-## 
-# struct CentralMomentProblem
-#     ns::NTuple{Int,N}
-#     altype::Union{NestedExpectation, BinomialExpansion} #Should rely be in solve
-#     exp_prob::ExpectationProblem
-# end
+
+struct CentralMomentProblem{} <: AbstractUncertaintyProblem
+     ns::NTuple{Int,N}
+     #altype::Union{NestedExpectation, BinomialExpansion} #Should rely be in solve
+     exp_prob::ExpectationProblem
+end
+
+
+# Constructor for general maps/functions
+function CentralMomentProblem(ns, g, pdist, params)
+    
+    g_higher_order = []
+    for n ∈ ns
+        for i ∈ 1:n
+            push!(g_higher_order, g(x, p)^i)
+        end
+    end
+
+    CentralMomentProblem(ns,
+        ExpectationProblem(g_higher_order, pdist, params, nout=sum(ns)))
+
+end
+
+# Constructor for DEProblems
+function CentralMomentProblem(ns, sm::SystemMap, g, h, d)
+    
+    g_higher_order = []
+    for n ∈ ns
+        for i ∈ 1:n
+            push!(g_higher_order, g(x, p)^i)
+        end
+    end
+
+    CentralMomentProblem(ns,
+        ExpectationProblem(sm, g, h, d,
+            ArrayPartition(deepcopy(sm.prob.u0),deepcopy(sm.prob.p)),
+            sum(ns)))
+
+end
+
 

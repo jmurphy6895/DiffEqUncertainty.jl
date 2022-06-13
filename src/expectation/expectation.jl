@@ -124,7 +124,6 @@ function DiffEqBase.solve(prob::ExpectationProblem, expalg::Koopman, args...;
     return sol 
 end
 
-
 # Integrate function to test new Adjoints, will need to roll up to Quadrature.jl
 function integrate(quadalg, adalg::AbstractExpectationADAlgorithm, f, lb::TB, ub::TB, p; 
                         nout = 1, batch = 0,

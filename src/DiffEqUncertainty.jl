@@ -5,7 +5,7 @@ using DiffEqBase, Statistics, Reexport, RecursiveArrayTools, StaticArrays,
     Distributions, KernelDensity, Zygote, LinearAlgebra, Random
 using Parameters: @unpack
 
-@reexport using Quadrature
+@reexport using Integrals
 import DiffEqBase: solve
 
 include("expectation/system_utils.jl")
