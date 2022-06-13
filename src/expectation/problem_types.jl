@@ -33,8 +33,8 @@ input_cov(prob::ExpectationProblem) = prob.h
 parameters(prob::ExpectationProblem) = prob.params
 
 
-struct CentralMomentProblem{} <: AbstractUncertaintyProblem
-     ns::NTuple{Int,N}
+struct CentralMomentProblem{N<:Int} <: AbstractUncertaintyProblem 
+     ns::NTuple{N, Int}
      #altype::Union{NestedExpectation, BinomialExpansion} #Should rely be in solve
      exp_prob::ExpectationProblem
 end
