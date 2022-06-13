@@ -129,7 +129,7 @@ function integrate(quadalg, adalg::AbstractExpectationADAlgorithm, f, lb::TB, ub
                         nout = 1, batch = 0,
                         kwargs...) where {TB}
     #TODO check batch iip type stability w/ QuadratureProblem{XXXX}
-    prob = QuadratureProblem{batch > 1}(f,lb,ub,p; nout = nout, batch = batch)
+    prob = IntegralProblem{batch > 1}(f,lb,ub,p; nout = nout, batch = batch)
     solve(prob, quadalg; kwargs...)
 end
 
